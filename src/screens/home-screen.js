@@ -1,12 +1,11 @@
 import React  from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import logo from '../../assets/firelogo.jpg'
+import { StyleSheet, View, Image } from 'react-native';
+import button from '../../assets/button.png'
 
 const HomeScreen = () => {
   return (
       <View style={styles.screen}>
-          <Text style={styles.screenText}>HomeScreen</Text>
-          <Image source={logo} style={styles.logo} />
+          <Image source={button} style={styles.logo} />
       </View>
   );
 };
@@ -26,8 +25,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   logo: {
-    height: 200,
-    width: 200,
+    height: 400,
+    width: 400,
   }
 });
 

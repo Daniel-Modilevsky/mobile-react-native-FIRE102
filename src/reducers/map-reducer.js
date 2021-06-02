@@ -1,23 +1,42 @@
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const initState = {
-    location: '138.482',
-    // icon: 1,
-    confirmLocation: false,
-}
+  markers: [],
+  currentLocationFlag: false,
+  counter: 1,
+  markerFlag: false,
+  region: {
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.01,
+    longitudeDelta: (0.01 * width) / height,
+  },
+};
 
+const MapReducer = (state = initState, action) => {
+  switch (action.type) {
+    case "SET_LOCATION":
+      return {
+        ...state,
+        region: action.payload.region,
+        currentLocationFlag: true,
+      };
 
-const TrackReducer = (state = initState, action) => {
+    case "CLEAR_MARKERS":
+      return { ...state, markers: [], counter: 1, markerFlag: false };
 
-    switch (action.type) {
-        case "SET_LOCATION":
-          return {...state, location: action.payload.location , confirmLocation: true} ;
-        
-        case "CLEAR_LOCATION":
-            return {...state, location: action.payload.location , confirmLocation: false} ;
+    case "ADD_MARKER":
+      return {
+        ...state,
+        markers: [...state.markers, action.payload],
+        counter: state.counter + 1,
+        markerFlag: true,
+      };
 
-        default:
-          return state;
-    }
-}
+    default:
+      return state;
+  }
+};
 
-export default TrackReducer;
+export default MapReducer;

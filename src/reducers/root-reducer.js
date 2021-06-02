@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux';
-import MapReducer from './map-reducer';
+import { combineReducers } from "redux";
+import MapReducer from "./map-reducer";
 
-const RootReducer = combineReducers ({
-   map: MapReducer,
+const RootReducer = combineReducers({
+  map: MapReducer,
 });
 
-export default RootReducer
+export default RootReducer;

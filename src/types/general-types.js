@@ -1,17 +1,17 @@
 export let RootStackParamList = {
   Root: undefined,
-  NotFound: undefined
+  NotFound: undefined,
 };
 
 export let BottomTabParamList = {
   TabOne: undefined,
-  TabTwo: undefined
+  TabTwo: undefined,
 };
 
 export let TabOneParamList = {
-  HomeScreen: undefined
+  HomeScreen: undefined,
 };
 
 export let TabTwoParamList = {
-  MapScreen: undefined
+  MapScreen: undefined,
 };

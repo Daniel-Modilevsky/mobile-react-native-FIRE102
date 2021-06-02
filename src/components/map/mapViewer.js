@@ -92,7 +92,6 @@ const MapViewer = ({
     const { latitude, longitude } = Coordinate;
     const marker = {
       key: `${1 + counter} דיווח`,
-      // key: Date.now(),
       coordinate: {
         latitude: latitude,
         longitude: longitude,

@@ -2,7 +2,14 @@ import { Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 const initState = {
-  markers: [],
+  marker: {
+    key: "-1",
+    coordinate: {
+      latitude: 37.78825,
+      longitude: -122.4324,
+    },
+    displayName: "none",
+  },
   currentLocationFlag: false,
   counter: 1,
   markerFlag: false,
@@ -24,12 +31,21 @@ const MapReducer = (state = initState, action) => {
       };
 
     case "CLEAR_MARKERS":
-      return { ...state, markers: [], counter: 1, markerFlag: false };
+      return {
+        ...state,
+        marker: {
+          key: "-1",
+          coordinate: { latitude: 37.78825, longitude: -122.4324 },
+          displayName: "none",
+        },
+        counter: 1,
+        markerFlag: false,
+      };
 
     case "ADD_MARKER":
       return {
         ...state,
-        markers: [...state.markers, action.payload],
+        marker: action.payload,
         counter: state.counter + 1,
         markerFlag: true,
       };

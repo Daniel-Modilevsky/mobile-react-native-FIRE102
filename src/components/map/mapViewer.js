@@ -21,7 +21,7 @@ const LONGITUDE_DELTA = (0.01 * width) / height;
 /*REDUCER-CONNECTION*/
 function mapStateToProps(state) {
   return {
-    markers: state.map.markers,
+    marker: state.map.marker,
     currentLocationFlag: state.map.currentLocationFlag,
     region: state.map.region,
     counter: state.map.counter,
@@ -45,7 +45,7 @@ const MapViewer = ({
   setterLocation,
   currentLocationFlag,
   region,
-  markers,
+  marker,
   markerFlag,
   counter,
 }) => {
@@ -68,6 +68,21 @@ const MapViewer = ({
           longitudeDelta: LONGITUDE_DELTA,
         };
         setterLocation(region);
+        Location.reverseGeocodeAsync({
+          latitude: region.latitude,
+          longitude: region.longitude,
+        }).then((displayNmae) => {
+          fullDisplayName =
+            displayNmae[0].street +
+            " , " +
+            displayNmae[0].name +
+            " , " +
+            displayNmae[0].city +
+            " , " +
+            displayNmae[0].region +
+            " , " +
+            displayNmae[0].country;
+        });
       });
     })();
   }, []);
@@ -88,18 +103,31 @@ const MapViewer = ({
    * @return marker
    */
   const generateMarkers = (Coordinate) => {
-    const result = [];
     const { latitude, longitude } = Coordinate;
-    const marker = {
+    const newMarker = {
       key: `${1 + counter} דיווח`,
       coordinate: {
         latitude: latitude,
         longitude: longitude,
       },
+      displayName: "",
     };
-    result.push(marker);
-
-    return result;
+    Location.reverseGeocodeAsync({
+      latitude: marker.coordinate.latitude,
+      longitude: marker.coordinate.longitude,
+    }).then((displayNmae) => {
+      newMarker.displayName =
+        displayNmae[0].street +
+        " , " +
+        displayNmae[0].name +
+        " , " +
+        displayNmae[0].city +
+        " , " +
+        displayNmae[0].region +
+        " , " +
+        displayNmae[0].country;
+    });
+    return newMarker;
   };
 
   const onMapPress = (e) => {
@@ -117,16 +145,13 @@ const MapViewer = ({
           style={styles.map}
           customMapStyle={customStyle}
         >
-          {markers.map(
-            (marker) =>
-              currentLocationFlag && (
-                <Marker
-                  title={marker[0].key}
-                  image={WarningIcon}
-                  coordinate={marker[0].coordinate}
-                  key={marker[0].key}
-                />
-              )
+          {currentLocationFlag && (
+            <Marker
+              title={marker.key}
+              image={WarningIcon}
+              coordinate={marker.coordinate}
+              key={marker.key}
+            />
           )}
         </MapView>
         <View style={styles.headLine}>
@@ -184,8 +209,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
     flexDirection: "row",
-    marginVertical: 530,
     width: 400,
+    position: "absolute",
+    top: 50,
   },
   textHeadline: {
     color: "white",
@@ -389,5 +415,4 @@ const customStyle = [
   },
 ];
 
-// export default MapViewer;
 export default connect(mapStateToProps, mapDispatchToProps)(MapViewer);

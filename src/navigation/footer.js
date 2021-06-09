@@ -8,12 +8,36 @@ import MapScreen from "../screens/map-screen";
 import OptionsScreen from "../screens/options-screen";
 import CameraScreen from "../screens/camera-screen";
 import ReportScreen from "../screens/report-screen";
+import AuthScreen from "../screens/auth-screen";
 
 const BottomTab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   return (
-    <BottomTab.Navigator style={styles.footer}>
+    <BottomTab.Navigator
+      initialRouteName="Auth"
+      tabBarOptions={{
+        activeTintColor: "#fff",
+        inactiveTintColor: "lightgray",
+        activeBackgroundColor: "#1aa3ff",
+        inactiveBackgroundColor: "#282834",
+        style: {
+          backgroundColor: "#282834",
+          paddingBottom: 3,
+          borderTopColor: "#282834",
+        },
+      }}
+    >
+      <BottomTab.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={{
+          tabBarLabel: "Auth",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        }}
+      />
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}

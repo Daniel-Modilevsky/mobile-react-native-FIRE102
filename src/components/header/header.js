@@ -6,9 +6,9 @@ const HeaderFire = () => {
   return (
     <View>
       <Header
-        style={styles.header}
+        backgroundColor="#fb5b5a"
         leftComponent={{ icon: "menu", color: "#fff" }}
-        centerComponent={{ text: "Fire - 102", style: styles.centerComponent }}
+        centerComponent={{ text: "FIRE 102", style: styles.centerComponent }}
         rightComponent={{ icon: "home", color: "#fff" }}
       />
     </View>
@@ -19,7 +19,7 @@ export default HeaderFire;
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "black",
+    backgroundColor: "#000",
   },
   centerComponent: {
     color: "#fff",

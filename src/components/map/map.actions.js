@@ -16,7 +16,7 @@ export function SetLocation(region) {
  * @return {dispatch} Type + payload.
  */
 export function ClearMarkers() {
-  return { type: "CLEAR_MARKERS", payload: [] };
+  return { type: "CLEAR_MARKERS", payload: {} };
 }
 
 /**

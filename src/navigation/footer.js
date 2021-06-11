@@ -6,6 +6,7 @@ import { StyleSheet } from "react-native";
 import HomeScreen from "../screens/home-screen";
 import MapScreen from "../screens/map-screen";
 import OptionsScreen from "../screens/options-screen";
+import TakePictureScreen from "../screens/take-picture-screen";
 import CameraScreen from "../screens/camera-screen";
 import ReportScreen from "../screens/report-screen";
 import AuthScreen from "../screens/auth-screen";
@@ -76,8 +77,8 @@ const BottomTabNavigator = () => {
       />
 
       <BottomTab.Screen
-        name="Camera"
-        component={CameraScreen}
+        name="TakePicture"
+        component={TakePictureScreen}
         options={{
           tabBarLabel: "Camera",
           tabBarIcon: ({ color, size }) => (

@@ -4,6 +4,7 @@ import * as React from "react";
 import HeaderFire from "../components/header/header";
 
 import BottomTabNavigator from "./footer";
+import CameraScreen from "../screens/camera-screen"
 
 export default function Navigator() {
   return (
@@ -20,6 +21,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} />
+      <Stack.Screen name="Camera" component={CameraScreen} />
     </Stack.Navigator>
   );
 }

@@ -54,9 +54,7 @@ const AuthScreen = ({
   const [currentEmail, setEmail] = useState(email);
   const [currentPhoneNumber, setPhoneNumber] = useState(phoneNumber);
   const [currentIdentityNumer, setIdentityNumer] = useState(identityNumer);
-  const [currentInVallidMessage, setInVallidMessage] = useState(
-    inVallidMessage
-  );
+  const [currentInVallidMessage, setInVallidMessage] = useState(inVallidMessage);
 
   useEffect(() => {
     loadUser();
@@ -64,20 +62,14 @@ const AuthScreen = ({
 
   /*EVENT-HANDLERS*/
   const submitHandler = () => {
-    currentUserName === "none" ||
+    (currentUserName === "none" ||
     currentEmail === "none" ||
     currentPhoneNumber === "none" ||
     currentPassword === "none" ||
-    currentIdentityNumer === "none"
-      ? setInVallidMessage("נא למלא את כל הטופס, חסרים פרטים")
-      : {};
-    validator.isMobilePhone(currentPhoneNumber)
-      ? {}
-      : setInVallidMessage("מספר הטלפון לא תקין");
+    currentIdentityNumer === "none")? setInVallidMessage("נא למלא את כל הטופס, חסרים פרטים"): {};
+    validator.isMobilePhone(currentPhoneNumber)? {} : setInVallidMessage("מספר הטלפון לא תקין");
     validator.isEmail(currentEmail) ? {} : setInVallidMessage("מייל לא תקין");
-    validator.isDecimal(currentIdentityNumer)
-      ? {}
-      : setInVallidMessage("מספר ת.ז לא תקין");
+    validator.isDecimal(currentIdentityNumer)? {} : setInVallidMessage("מספר ת.ז לא תקין");
 
     if (
       currentUserName !== "none" &&
@@ -89,6 +81,7 @@ const AuthScreen = ({
       validator.isEmail(currentEmail) &&
       validator.isDecimal(currentIdentityNumer)
     ) {
+      console.log(currentUserName , currentEmail, currentPhoneNumber, currentPassword, currentIdentityNumer);
       saveUser();
       navigation.navigate("Home");
     }

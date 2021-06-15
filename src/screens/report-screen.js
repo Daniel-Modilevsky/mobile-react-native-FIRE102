@@ -1,5 +1,8 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import React , {useEffect} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, AsyncStorage} from 'react-native';
+import { connect } from "react-redux";
+import store from '../reducers/store';
+
 
 const getTime = () => {
   let date = new Date();
@@ -13,27 +16,46 @@ const getTime = () => {
   let seconds = "" + date.getSeconds();
   if(seconds.length < 2) seconds = "0"+seconds;
 
-  time = `${hours}:${minutes}:${seconds}`;
+  let time = `${hours}:${minutes}:${seconds}`;
 
   return time;
 }
 
-const ReportScreen = (fullname, phone, location, type) => {
 
-  fullname = "ברק דניאל";
-  phone = "059-9999999";
-  location = "גבעת השלושה 0, גבעת השלושה";
-  type = "שריפה";
+/*REDUCER-CONNECTION*/
+function mapStateToProps(state) {
+  return {
+    marker: state.map.marker.displayName,
+    userName: state.user.userName,
+    phoneNumber: state.user.phoneNumber
+  };
+}
+
+const ReportScreen = ({userName, phoneNumber, marker}) => {
+
+  useEffect(() => {
+    console.log(userName);
+    console.log(phoneNumber);
+    console.log(store.getState());
+    temp();
+  }, []);
+
+  const temp = async () => {
+    const a = await AsyncStorage.getItem("userName");
+    const b = await  AsyncStorage.getItem("phoneNumber");
+    console.log(a);
+    console.log(b);
+  }
 
   return (
     <View style={styles.screen}>
       <View style={styles.form}>
         <Text style={styles.screenText}> פרטי דיווח </Text>
 
-        <View style={styles.field}><Text style={styles.textFields}> {fullname} </Text></View>
-        <View style={styles.field}><Text style={styles.textFields}> {phone} </Text></View>
-        <View style={styles.field}><Text style={styles.textFields}> {location} </Text></View>
-        <View style={styles.field}><Text style={styles.textFields}> {type} </Text></View>
+        <View style={styles.field}><Text style={styles.textFields}> {userName} </Text></View>
+        <View style={styles.field}><Text style={styles.textFields}> {phoneNumber} </Text></View>
+        <View style={styles.field}><Text style={styles.textFields}> {marker} </Text></View>
+        <View style={styles.field}><Text style={styles.textFields}> {"שריפה"} </Text></View>
         <View style={styles.field}><Text style={styles.textFields}> {getTime()} </Text></View>
         <TextInput style={styles.inputField} placeholder="הערות" multiline={true}/>
         <TouchableOpacity style={styles.confirmBtn} >
@@ -44,7 +66,8 @@ const ReportScreen = (fullname, phone, location, type) => {
   );
 };
 
-export default ReportScreen;
+export default connect(mapStateToProps)(ReportScreen);
+
 
 const styles = StyleSheet.create({
   screen: {
@@ -71,9 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingTop: 10,
     width: '80%',
-    height: 30,
+    height: 40,
     borderRadius: 20,
     marginBottom: 10,
+    // whiteSpace: "nowrap", 
+    // overflow:"hidden", 
+    // textOverflow: "ellipsis" 
   },
   textFields: {
     color: 'black',
@@ -93,7 +119,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: 'white',
     width: '80%',
-    height: 180,
+    height: 130,
     borderRadius: 20,
     marginBottom: 20,
     padding: 15,

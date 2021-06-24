@@ -5,6 +5,7 @@ import HeaderFire from "../components/header/header";
 
 import BottomTabNavigator from "./footer";
 import CameraScreen from "../screens/camera-screen"
+import ConfirmationScreen from "../screens/confirmation-screen"
 
 export default function Navigator() {
   return (
@@ -22,6 +23,7 @@ function RootNavigator() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="Camera" component={CameraScreen} />
+      <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
     </Stack.Navigator>
   );
 }

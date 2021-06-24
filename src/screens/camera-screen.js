@@ -88,7 +88,7 @@ const CameraScreen = ({ navigation }) => {
               }}
             >
               צלם שוב
-          </Text>
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("Report")}
@@ -111,7 +111,7 @@ const CameraScreen = ({ navigation }) => {
               }}
             >
               אישור
-          </Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

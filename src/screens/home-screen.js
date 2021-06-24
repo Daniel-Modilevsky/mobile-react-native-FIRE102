@@ -7,7 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
-      <Pressable onPress={() => navigation.navigate("Map")}>
+      <Pressable onPress={() => navigation.navigate("Options")}>
         <Image source={button} style={styles.logo} />
       </Pressable>
     </View>

@@ -1,24 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const getTime = () => {
   let date = new Date();
 
   let hours = "" + date.getHours();
-  if(hours.length < 2) hours = "0"+hours;
+  if (hours.length < 2) hours = "0" + hours;
 
   let minutes = "" + date.getMinutes();
-  if(minutes.length < 2) minutes = "0"+minutes;
+  if (minutes.length < 2) minutes = "0" + minutes;
 
   let seconds = "" + date.getSeconds();
-  if(seconds.length < 2) seconds = "0"+seconds;
+  if (seconds.length < 2) seconds = "0" + seconds;
 
-  time = `${hours}:${minutes}:${seconds}`;
+  let time = `${hours}:${minutes}:${seconds}`;
 
   return time;
 }
 
-const ReportScreen = (fullname, phone, location, type) => {
+const ReportScreen = ({ navigation }, fullname, phone, location, type) => {
 
   fullname = "ברק דניאל";
   phone = "059-9999999";
@@ -35,8 +37,8 @@ const ReportScreen = (fullname, phone, location, type) => {
         <View style={styles.field}><Text style={styles.textFields}> {location} </Text></View>
         <View style={styles.field}><Text style={styles.textFields}> {type} </Text></View>
         <View style={styles.field}><Text style={styles.textFields}> {getTime()} </Text></View>
-        <TextInput style={styles.inputField} placeholder="הערות" multiline={true}/>
-        <TouchableOpacity style={styles.confirmBtn} >
+        <TextInput style={styles.inputField} placeholder="הערות" multiline={true} />
+        <TouchableOpacity style={styles.confirmBtn} onPress={() => navigation.navigate("Confirmation")}>
           <Text style={styles.screenText}>דווח</Text>
         </TouchableOpacity>
       </View>

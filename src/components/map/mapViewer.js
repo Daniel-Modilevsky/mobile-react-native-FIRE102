@@ -166,7 +166,7 @@ const MapViewer = ({
               <Text>מחיקת סימונים</Text>
             </TouchableOpacity>
             <Pressable
-              onPress={() => navigation.navigate("Options")}
+              onPress={() => navigation.navigate("Camera")}
               style={styles.bubble2}
             >
               <Text>שמירת סימון</Text>

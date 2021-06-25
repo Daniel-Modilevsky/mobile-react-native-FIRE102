@@ -133,8 +133,6 @@ const MapViewer = ({
         displayNmae[0].region +
         " , " +
         displayNmae[0].country;
-        console.log(newMarker.displayName);
-        // const name = translateName(newMarker.displayName).then(wow => console.log(wow))
         newMarker.displayName = name;
     });
     return newMarker;

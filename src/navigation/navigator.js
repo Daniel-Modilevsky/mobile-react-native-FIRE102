@@ -6,6 +6,7 @@ import HeaderFire from "../components/header/header";
 import BottomTabNavigator from "./footer";
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import ConfirmationScreen from "../screens/confirmation-screen"
 
 import HomeScreen from "../screens/home-screen";
 import MapScreen from "../screens/map-screen";
@@ -34,14 +35,12 @@ export default function Navigator() {
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Real" component={RealTimeScreen} />
         <Drawer.Screen name="Map" component={MapScreen} />
-
         <Drawer.Screen name="Auth" component={AuthScreen} />
         <Drawer.Screen name="Camera" component={CameraScreen} />
         <Drawer.Screen name="Report" component={ReportScreen} />
         <Drawer.Screen name="Pic" component={TakePictureScreen} />
-
+        <Drawer.Screen name="Confirmation" component={ConfirmationScreen} />
       </Drawer.Navigator>
-      {/* <RootNavigator /> */}
     </NavigationContainer>
   )
 }
@@ -52,7 +51,6 @@ function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} />
-      <Stack.Screen name="Camera" component={CameraScreen} />
     </Stack.Navigator>
   );
 }

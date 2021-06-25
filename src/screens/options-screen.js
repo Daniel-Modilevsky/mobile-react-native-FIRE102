@@ -1,17 +1,43 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import logo from "../../assets/firelogo.jpg";
-import HeaderFire from "../components/header/header";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const OptionsScreen = ({ navigation }) => {
+  const [eventType, setEventType] = useState(null);
+  const setAndNavigate = (option) => {
+    setEventType(option);
+    navigation.navigate("Map")
+  }
+
   return (
     <View style={styles.screen}>
-      <Text style={styles.screenText}>OptionsScreen</Text>
-      <Pressable onPress={() => navigation.navigate("Map")}>
-        <Image source={logo} style={styles.logo} />
-      </Pressable>
+      <Text style={styles.screenText}></Text>
+      <TouchableOpacity
+        onPress={() => setAndNavigate('fire-open')}
+        style={styles.button}>
+        <Text style={styles.text}>  שריפה שטח פתוח</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setAndNavigate('fire-close')}
+        style={styles.button}>
+        <Text style={styles.text}>  שריפה שטח סגור</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setAndNavigate('rescue')}
+        style={styles.button}>
+        <Text style={styles.text}> חילוץ </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setAndNavigate('hazard')}
+        style={styles.button}>
+        <Text style={styles.text}> מפגע </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setAndNavigate('crash')}
+        style={styles.button}>
+        <Text style={styles.text}> תאונה </Text>
+      </TouchableOpacity>
       <View style={styles.headLine}>
         <Pressable style={styles.back}>
           <Button
@@ -36,7 +62,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   screenText: {
-    marginTop: 300,
+    marginTop: 100,
     color: "white",
     fontSize: 22,
     fontWeight: "bold",
@@ -68,5 +94,21 @@ const styles = StyleSheet.create({
     color: "yellow",
     fontSize: 20,
     fontWeight: "700",
+  },
+  button: {
+    width: '80%',
+    height: '9%',
+    backgroundColor: '#F56552',
+    borderRadius: 50,
+    alignItems: 'center',
+    marginTop: '8%',
+    borderColor: 'white',
+    borderWidth: 2,
+  },
+  text: {
+    paddingTop: '6%',
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: "#fff"
   },
 });

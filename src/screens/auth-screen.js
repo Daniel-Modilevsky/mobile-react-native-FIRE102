@@ -15,6 +15,7 @@ import validator from "validator";
 import { connect } from "react-redux";
 import { login, register } from "../components/authentication/auth.actions";
 import HeaderFire from "../components/header/header";
+import loader from "../../assets/loader1.gif";
 
 /*REDUCER-CONNECTION*/
 function mapStateToProps(state) {
@@ -56,9 +57,12 @@ const AuthScreen = ({
   const [currentPhoneNumber, setPhoneNumber] = useState(phoneNumber);
   const [currentIdentityNumer, setIdentityNumer] = useState(identityNumer);
   const [currentInVallidMessage, setInVallidMessage] = useState(inVallidMessage);
+  const [flagLoader, setFlagLoader] = useState(true);
+
 
   useEffect(() => {
     loadUser();
+    setFlagLoader(false);
   }, []);
 
   /*EVENT-HANDLERS*/
@@ -101,9 +105,10 @@ const AuthScreen = ({
     }
   };
 
-  const loadUser = async ({ navigation }) => {
+  const loadUser = async () => {
     try {
       const me = await AsyncStorage.getItem("userName");
+      // setFlagLoader(false);
       if (me !== null) {
         setterLogin();
         navigation.navigate("Home");
@@ -113,62 +118,71 @@ const AuthScreen = ({
     }
   };
 
-  return (
-    <View style={styles.screen}>
-      <HeaderFire navigation={navigation} style={{ position:'absolute', top:0,}}/>
-      <Image source={logo} style={styles.logo} />
-      <Text style={styles.screenText}>רישום למערכת</Text>
-      {validationfalg && (
-        <Text style={styles.errorMsg}>{currentInVallidMessage}</Text>
-      )}
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="שם מלא..."
-          placeholderTextColor="#003f5c"
-          onChangeText={(text) => setUserName(text)}
-        />
+  if(flagLoader){
+    return (
+      <View style={styles.loaderBack}>
+        <Image source={loader} style={styles.loader} />
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="סיסמה..."
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(text) => setPassword(text)}
-        />
+    );
+  }else {
+
+    return (
+      <View style={styles.screen}>
+        <HeaderFire navigation={navigation} style={{ position:'absolute', top:0,}}/>
+        <Image source={logo} style={styles.logo} />
+        <Text style={styles.screenText}>רישום למערכת</Text>
+        {validationfalg && (
+          <Text style={styles.errorMsg}>{currentInVallidMessage}</Text>
+        )}
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="שם מלא..."
+            placeholderTextColor="#003f5c"
+            onChangeText={(text) => setUserName(text)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="סיסמה..."
+            placeholderTextColor="#003f5c"
+            secureTextEntry={true}
+            onChangeText={(text) => setPassword(text)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="תעודת זהות..."
+            placeholderTextColor="#003f5c"
+            keyboardType="numeric"
+            onChangeText={(text) => setIdentityNumer(text)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="אימייל..."
+            placeholderTextColor="#003f5c"
+            onChangeText={(text) => setEmail(text)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="טלפון..."
+            placeholderTextColor="#003f5c"
+            keyboardType="numeric"
+            onChangeText={(text) => setPhoneNumber(text)}
+          />
+        </View>
+        <TouchableOpacity style={styles.loginBtn} onPress={() => submitHandler()}>
+          <Text style={styles.loginText}>הירשם</Text>
+        </TouchableOpacity>
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="תעודת זהות..."
-          placeholderTextColor="#003f5c"
-          keyboardType="numeric"
-          onChangeText={(text) => setIdentityNumer(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="אימייל..."
-          placeholderTextColor="#003f5c"
-          onChangeText={(text) => setEmail(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="טלפון..."
-          placeholderTextColor="#003f5c"
-          keyboardType="numeric"
-          onChangeText={(text) => setPhoneNumber(text)}
-        />
-      </View>
-      <TouchableOpacity style={styles.loginBtn} onPress={() => submitHandler()}>
-        <Text style={styles.loginText}>הירשם</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  }
 };
 
 // export default AuthScreen;

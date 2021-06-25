@@ -41,6 +41,8 @@ function mapStateToProps(state) {
 }
 
 const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
+  //const ReportScreen = ({ navigation }, fullname, phone, location, type) => {
+
   const [report, setReport] = React.useState({});
 
   useEffect(() => {
@@ -93,12 +95,9 @@ const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
       <View style={styles.form}>
         <Text style={styles.screenText}> פרטי דיווח </Text>
 
-        <View style={styles.field}>
-          <Text style={styles.textFields}> {userName} </Text>
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.textFields}> {phoneNumber} </Text>
-        </View>
+        <View style={styles.field}><Text style={styles.textFields}> {userName} </Text></View>
+        <View style={styles.field}><Text style={styles.textFields}> {phoneNumber} </Text></View>
+        {/* <View style={styles.field}><Text style={styles.textFields}> {location} </Text></View> */}
         <View style={styles.field}>
           <Text style={styles.textFields}>
             {marker.displayName.length > 40
@@ -106,20 +105,16 @@ const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
               : marker.displayName}
           </Text>
         </View>
-        <View style={styles.field}>
-          <Text style={styles.textFields}> {"שריפה"} </Text>
-        </View>
-        <View style={styles.field}>
-          <Text style={styles.textFields}> {getTime()} </Text>
-        </View>
-        <TextInput
-          style={styles.inputField}
-          placeholder="הערות"
-          multiline={true}
-        />
+        <View style={styles.field}><Text style={styles.textFields}> {report.type} </Text></View>
+        <View style={styles.field}><Text style={styles.textFields}> {getTime()} </Text></View>
+        <TextInput style={styles.inputField} placeholder="הערות" multiline={true} />
+        <TouchableOpacity style={styles.confirmBtn} onPress={() => navigation.navigate("Confirmation")}>
+        <Text style={styles.screenText}>דווח</Text>
+        </TouchableOpacity>
+{/* 
         <TouchableOpacity style={styles.confirmBtn} onPress={sendReport}>
           <Text style={styles.screenText}>דווח</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={styles.headLine}>
           <Pressable style={styles.back}>
             <Button

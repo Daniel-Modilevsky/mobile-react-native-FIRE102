@@ -34,7 +34,6 @@ export function register(
       body: JSON.stringify(params)
     })
       .then(function (response) {
-        console.log(response);
         return response.json();
       })
       .then(function (json) {
@@ -61,6 +60,10 @@ export async function login(dispatch) {
   try {
     const userName = await AsyncStorage.getItem("userName");
     const password = await AsyncStorage.getItem("password");
+    const email = await AsyncStorage.getItem("email");
+    const phoneNumber = await AsyncStorage.getItem("phoneNumber");
+    const identityNumer = await AsyncStorage.getItem("identityNumer");
+
     const params = {
       userName: userName,
       password: password,
@@ -74,7 +77,6 @@ export async function login(dispatch) {
         body: JSON.stringify(params)
       })
         .then(function (response) {
-          console.log(response);
           return response.json();
         })
         .then(function (json) {

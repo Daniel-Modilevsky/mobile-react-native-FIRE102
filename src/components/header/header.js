@@ -5,7 +5,6 @@ import { Header } from "react-native-elements";
 import { FontAwesome5 } from '@expo/vector-icons'
 
 const HeaderFire = ({navigation}) => {
-  console.log(navigation);
   return (
     <View>
       <Header

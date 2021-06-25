@@ -12,51 +12,25 @@ import {
 import MapView, { Marker, ProviderPropType } from "react-native-maps";
 import * as Location from "expo-location";
 
-import WarningIcon from "../../../assets/alerticon2.png";
-import loader from "../../../assets/loader1.gif";
-import myLocation from "../../../assets/myLocation.png";
-import { Button } from "react-native-elements";
-import { FontAwesome5 } from '@expo/vector-icons'
-import { SetLocation, ClearMarkers, AddMarker } from "./map.actions";
-
+import WarningIcon from "../../assets/alerticon2.png";
+import loader from "../../assets/loader1.gif";
+import HeaderFire from "../components/header/header";
 
 
 const { width, height } = Dimensions.get("window");
 const LONGITUDE_DELTA = (0.01 * width) / height;
 
-/*REDUCER-CONNECTION*/
-function mapStateToProps(state) {
-  return {
-    marker: state.map.marker,
-    currentLocationFlag: state.map.currentLocationFlag,
-    region: state.map.region,
-    counter: state.map.counter,
-    markerFlag: state.map.markerFlag,
-  };
-}
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setterCleanMarkers: () => dispatch(ClearMarkers()),
-    setterMarker: (marker) => dispatch(AddMarker(marker)),
-    setterLocation: (rigion) => dispatch(SetLocation(rigion)),
-  };
-}
 
-const MapViewer = ({
-  navigation,
-  provider,
-  setterCleanMarkers,
-  setterMarker,
-  setterLocation,
-  currentLocationFlag,
-  region,
-  marker,
-  markerFlag,
-  counter,
-}) => {
+const RealTimeScreen = ({ provider, navigation}) => {
+  const [markers , setMarkers] = useState([]);
+  const [countMarkers , setCountMarkers] = useState(0);
+  const [errorMsg , setErrorMsg] = useState('none');
+  const [location , setterLocation] = useState({});
+  const [currentLocationFlag  ,setCurrentLocationFlag ] = useState(false);
+
   useEffect(() => {
-    /*GET PREMITIONS FOR USING CURRENT LOCATION */
+     /*GET PREMITIONS FOR USING CURRENT LOCATION */
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -73,127 +47,60 @@ const MapViewer = ({
           latitudeDelta: 0.01,
           longitudeDelta: LONGITUDE_DELTA,
         };
+        console.log("region");
+        console.log(region);
         setterLocation(region);
-        Location.reverseGeocodeAsync({
-          latitude: region.latitude,
-          longitude: region.longitude,
-        }).then((displayNmae) => {
-          fullDisplayName =
-            displayNmae[0].street +
-            " , " +
-            displayNmae[0].name +
-            " , " +
-            displayNmae[0].city +
-            " , " +
-            displayNmae[0].region +
-            " , " +
-            displayNmae[0].country;
-        });
+        setCurrentLocationFlag(false);
+        console.log("currentLocationFlag");
+        console.log(currentLocationFlag);
+      });
+
+      //fetch get all markers
+      await fetch('https://fire102.herokuapp.com/api/markers')
+      .then(function (response) {
+        console.log(response);
+        return response.json();
+      })
+      .then(function (json) {
+        console.log(json);
+        setMarkers(json);
+        setCountMarkers(json.length);
+      })
+      .catch(function (error) {
+        console.log(
+          "There has been a problem with your fetch operation: " + error.message
+        );
+        throw error;
       });
     })();
+
+    
   }, []);
 
-  /*EVENTS-HANDLER*/
-  /**
-   * Clear Markers & Hide continue buttons till put 1 coordinate
-   *
-   * @return Void
-   */
-  const clearMarkers = () => {
-    setterCleanMarkers();
-  };
 
-  /**
-   * Create new marker from user press on the map
-   * @param Coordinate: object
-   * @return marker
-   */
-  const generateMarkers = (Coordinate) => {
-    const { latitude, longitude } = Coordinate;
-    const newMarker = {
-      key: `${1 + counter} דיווח`,
-      coordinate: {
-        latitude: latitude,
-        longitude: longitude,
-      },
-      displayName: "",
-    };
-
-    Location.reverseGeocodeAsync({
-      latitude: newMarker.coordinate.latitude,
-      longitude: newMarker.coordinate.longitude,
-    }).then((displayNmae) => {
-      newMarker.displayName =
-        displayNmae[0].street +
-        " , " +
-        displayNmae[0].name +
-        " , " +
-        displayNmae[0].city +
-        " , " +
-        displayNmae[0].region +
-        " , " +
-        displayNmae[0].country;
-        console.log(newMarker.displayName);
-        // const name = translateName(newMarker.displayName).then(wow => console.log(wow))
-        newMarker.displayName = name;
-    });
-    return newMarker;
-  };
-  const onMapPress = (e) => {
-    const newMarker = generateMarkers(e.nativeEvent.coordinate);
-    setterMarker(newMarker);
-  };
-
-  if (currentLocationFlag) {
+  if (!currentLocationFlag) {
     return (
       <View style={styles.container}>
+        <HeaderFire navigation={navigation} style={styles.header}/>
         <MapView
-          initialRegion={region}
-          onPress={onMapPress}
+          initialRegion={location}
           provider={provider}
           style={styles.map}
           customMapStyle={customStyle}
         >
-          {currentLocationFlag && (
-            <Marker
+          {countMarkers > 0 && markers.map(marker =>  
+             <Marker
               title={marker.key}
               image={WarningIcon}
               coordinate={marker.coordinate}
               key={marker.key}
             />
           )}
-          <Marker
-              title={'המיקום שלי'}
-              image={myLocation}
-              coordinate={{latitude:region.latitude, longitude:region.longitude}}
-              key={'myLocation'}
-            />
         </MapView>
         <View style={styles.headLine}>
-        <Pressable style={styles.back}>
-          <Button   type="outline" onPress={() => navigation.navigate("Option")}
-            icon={ <FontAwesome5 name="arrow-right" size={15} color="#fff"/>}
-          />
-        </Pressable>
-        <Text style={styles.textHeadline}> איפה האירוע?</Text>
-        <Text style={styles.leftText}>2/5</Text>
-      </View>
-        {markerFlag && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => clearMarkers()}
-              style={styles.bubble}
-            >
-              <Text>מחיקת סימונים</Text>
-            </TouchableOpacity>
-            <Pressable
-              onPress={() => navigation.navigate("Camera")}
-              style={styles.bubble2}
-            >
-              <Text>שמירת סימון</Text>
-            </Pressable>
-          </View>
-        )}
+          <Text style={styles.textHeadline}>מפת הדיווחים</Text>
+          <Text> {countMarkers} דיווחים</Text>
+        </View>
       </View>
     );
   } else {
@@ -205,7 +112,9 @@ const MapViewer = ({
   }
 };
 
-MapViewer.propTypes = {
+export default RealTimeScreen;
+
+RealTimeScreen.propTypes = {
   provider: ProviderPropType,
 };
 
@@ -224,6 +133,7 @@ const styles = StyleSheet.create({
   loader: {},
   map: {
     ...StyleSheet.absoluteFillObject,
+    zIndex: 900,
   },
   headLine: {
     backgroundColor: "rgba(70,130,180,0.7)",
@@ -239,15 +149,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
-    width: 300,
-  },
-  back:{
-    marginLeft: 15
-  },
-  leftText:{
-    color: "yellow",
-    fontSize: 20,
-    fontWeight: "700",
+    width: 400,
   },
   bubble: {
     backgroundColor: "rgba(168,183,255,0.7)",
@@ -280,6 +182,12 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: "transparent",
   },
+  header:{
+    position:'absolute',
+    marginBottom: 500,
+    zIndex: 1000,
+    marginTop: 200,
+  }
 });
 
 const customStyle = [
@@ -444,4 +352,3 @@ const customStyle = [
   },
 ];
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapViewer);

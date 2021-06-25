@@ -14,6 +14,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import validator from "validator";
 import { connect } from "react-redux";
 import { login, register } from "../components/authentication/auth.actions";
+import HeaderFire from "../components/header/header";
 
 /*REDUCER-CONNECTION*/
 function mapStateToProps(state) {
@@ -89,18 +90,18 @@ const AuthScreen = ({
 
   const saveUser = async () => {
     try {
-      await AsyncStorage.setItem("userName", userName);
-      await AsyncStorage.setItem("email", email);
-      await AsyncStorage.setItem("password", password);
-      await AsyncStorage.setItem("phoneNumber", phoneNumber);
-      await AsyncStorage.setItem("identityNumer", identityNumer);
-      setterRegister(userName, email, password, phoneNumber, identityNumer);
+      await AsyncStorage.setItem("userName", currentUserName);
+      await AsyncStorage.setItem("email", currentEmail);
+      await AsyncStorage.setItem("password", currentPassword);
+      await AsyncStorage.setItem("phoneNumber", currentPhoneNumber);
+      await AsyncStorage.setItem("identityNumer", currentIdentityNumer);
+      setterRegister(currentUserName, currentEmail, currentPassword, currentPhoneNumber, currentIdentityNumer);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const loadUser = async () => {
+  const loadUser = async ({ navigation }) => {
     try {
       const me = await AsyncStorage.getItem("userName");
       if (me !== null) {
@@ -114,6 +115,7 @@ const AuthScreen = ({
 
   return (
     <View style={styles.screen}>
+      <HeaderFire navigation={navigation} style={{ position:'absolute', top:0,}}/>
       <Image source={logo} style={styles.logo} />
       <Text style={styles.screenText}>רישום למערכת</Text>
       {validationfalg && (
@@ -175,9 +177,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen);
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: "#282834",
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    height:"100%"
   },
   screenText: {
     color: "white",

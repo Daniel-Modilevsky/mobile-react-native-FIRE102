@@ -2,10 +2,30 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { AddType } from "../components/map/map.actions"; 
+import { connect } from "react-redux";
 
-const OptionsScreen = ({ navigation }) => {
+
+/*REDUCER-CONNECTION*/
+function mapStateToProps(state) {
+  return {
+    type: state.map.type,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setterType: (type) => dispatch(AddType(type)),
+  };
+}
+
+
+
+const OptionsScreen = ({ navigation, setterType }) => {
   const [eventType, setEventType] = useState(null);
+
   const setAndNavigate = (option) => {
+    setterType(option);
     setEventType(option);
     navigation.navigate("Map")
   }
@@ -14,14 +34,14 @@ const OptionsScreen = ({ navigation }) => {
     <View style={styles.screen}>
       <Text style={styles.screenText}></Text>
       <TouchableOpacity
-        onPress={() => setAndNavigate('fire-open')}
+        onPress={() => setAndNavigate('fire-urban')}
         style={styles.button}>
-        <Text style={styles.text}>  שריפה שטח פתוח</Text>
+        <Text style={styles.text}>שריפה שטח אורבני</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => setAndNavigate('fire-close')}
+        onPress={() => setAndNavigate('fire-field')}
         style={styles.button}>
-        <Text style={styles.text}>  שריפה שטח סגור</Text>
+        <Text style={styles.text}> שריפה שטח פתוח</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => setAndNavigate('rescue')}
@@ -53,7 +73,7 @@ const OptionsScreen = ({ navigation }) => {
   );
 };
 
-export default OptionsScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(OptionsScreen);
 
 const styles = StyleSheet.create({
   screen: {

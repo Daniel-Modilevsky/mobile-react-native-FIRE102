@@ -19,6 +19,8 @@ const initState = {
     latitudeDelta: 0.01,
     longitudeDelta: (0.01 * width) / height,
   },
+  type: "none",
+  photoUrl: "none"
 };
 
 const MapReducer = (state = initState, action) => {
@@ -50,6 +52,18 @@ const MapReducer = (state = initState, action) => {
         markerFlag: true,
       };
 
+    case "ADD_TYPE":
+      return {
+        ...state,
+        type: action.payload,
+      };
+    
+    case "ADD_PHOTO":
+      return {
+        ...state,
+        photoUrl: action.payload,
+      }
+      ;
     default:
       return state;
   }

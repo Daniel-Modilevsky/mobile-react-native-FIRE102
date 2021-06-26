@@ -9,28 +9,12 @@ import {
   Text,
   AsyncStorage
 } from "react-native";
-import {
-  Avatar,
-  Title,
-  Caption,
-  Paragraph,
-  Drawer,
-  TouchableRipple,
-  Switch,
-} from "react-native-paper";
-import {
-  DrawerNavigatorItems,
-  DrawerContentComponentProps,
-} from "react-navigation-drawer";
 import backgroundPhoto from "../../../assets/background.jpg";
-import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import logo from "../../../assets/firelogo.jpg";
-import store from "../../reducers/store";
+// import SyncStorage from 'sync-storage';
 
-const name = store.getState().user.userName;
-const userName = AsyncStorage.getItem("userName");
-
+const name = "none";
 
 export default SliderMenu = (props) => (
     
@@ -43,10 +27,7 @@ export default SliderMenu = (props) => (
             source={logo}
             style={styles.profile}
         />
-        {name!=="none" && <Text style={styles.name}> {name} </Text>}
-        <View style={{flexDirection:"row"}}>
-            <Text>bla</Text>
-        </View>
+        {name!=="none" && <Text style={styles.userName}> {name} </Text>}
       </ImageBackground>
       <View style={styles.section}>
         <TouchableOpacity onPress={() => props.navigation.navigate("Home")} style={styles.nav}>

@@ -79,8 +79,8 @@ export async function login(dispatch) {
         .then(function (response) {
           return response.json();
         })
-        .then(function (json) {
-          console.log(json);
+        .then(function (user) {
+          console.log(user);
         })
         .catch(function (error) {
           console.log(

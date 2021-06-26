@@ -28,3 +28,24 @@ export function ClearMarkers() {
 export function AddMarker(marker) {
   return { type: "ADD_MARKER", payload: marker };
 }
+
+
+/**
+ * Insert type to correct report
+ *
+ * @param type:string
+ * @return {dispatch} Type + payload.
+ */
+ export function AddType(type) {
+  return { type: "ADD_TYPE", payload: type };
+}
+
+/**
+ * Insert photo to correct report
+ *
+ * @param photo:string (in base64)
+ * @return {dispatch} Type + payload.
+ */
+ export function AddPhoto(photo) {
+  return { type: "ADD_PHOTO", payload: photo };
+}

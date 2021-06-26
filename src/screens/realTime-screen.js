@@ -1,70 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  Image,
-} from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
 import MapView, { Marker, ProviderPropType } from "react-native-maps";
-import * as Location from "expo-location";
-
 import WarningIcon from "../../assets/alerticon2.png";
-import loader from "../../assets/loader1.gif";
 import HeaderFire from "../components/header/header";
+import my from "../../assets/myLocation.png";
+import { Button } from "react-native-elements";
 
+/*REDUCER-CONNECTION*/
+function mapStateToProps(state) {
+  return {
+    myLocation: state.map.region,
+  };
+}
 
-const { width, height } = Dimensions.get("window");
-const LONGITUDE_DELTA = (0.01 * width) / height;
-
-
-
-const RealTimeScreen = ({ provider, navigation}) => {
-  const [markers , setMarkers] = useState([]);
-  const [countMarkers , setCountMarkers] = useState(0);
-  const [errorMsg , setErrorMsg] = useState('none');
-  const [location , setterLocation] = useState({});
-  const [currentLocationFlag  ,setCurrentLocationFlag ] = useState(false);
+const RealTimeScreen = ({ provider, navigation, myLocation }) => {
+  const [markers, setMarkers] = useState([]);
+  const [countMarkers, setCountMarkers] = useState(0);
 
   useEffect(() => {
-     /*GET PREMITIONS FOR USING CURRENT LOCATION */
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
+    getMarkers();
+  }, []);
 
-      /*GET CURRENT LOCATION */
-      await Location.getCurrentPositionAsync({}).then((location) => {
-        // setCurrentLocationFlag(true);
-        const region = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: LONGITUDE_DELTA,
-        };
-        console.log("region");
-        console.log(region);
-        setterLocation(region);
-        setCurrentLocationFlag(false);
-        console.log("currentLocationFlag");
-        console.log(currentLocationFlag);
-      });
-
-      //fetch get all markers
-      await fetch('https://fire102.herokuapp.com/api/markers')
+  const getMarkers = async () => {
+    //fetch get all markers
+    await fetch("https://fire102.herokuapp.com/api/markers")
       .then(function (response) {
-        console.log(response);
         return response.json();
       })
-      .then(function (json) {
-        console.log(json);
-        setMarkers(json);
-        setCountMarkers(json.length);
+      .then(function (recivedMarkers) {
+        console.log(recivedMarkers[0].coordinate.latitude);
+        console.log(recivedMarkers[0].coordinate.longitude);
+        setMarkers(recivedMarkers);
+        setCountMarkers(recivedMarkers.length);
       })
       .catch(function (error) {
         console.log(
@@ -72,47 +40,54 @@ const RealTimeScreen = ({ provider, navigation}) => {
         );
         throw error;
       });
-    })();
+  };
 
-    
-  }, []);
-
-
-  if (!currentLocationFlag) {
-    return (
-      <View style={styles.container}>
-        <HeaderFire navigation={navigation} style={styles.header}/>
-        <MapView
-          initialRegion={location}
-          provider={provider}
-          style={styles.map}
-          customMapStyle={customStyle}
-        >
-          {countMarkers > 0 && markers.map(marker =>  
-             <Marker
+  return (
+    <View style={styles.container}>
+      <MapView
+        initialRegion={myLocation}
+        provider={provider}
+        style={styles.map}
+        customMapStyle={customStyle}
+      >
+        {countMarkers > 0 &&
+          markers.map((marker) => (
+            <Marker
               title={marker.key}
               image={WarningIcon}
-              coordinate={marker.coordinate}
+              coordinate={{
+                latitude: marker.coordinate.latitude,
+                longitude: marker.coordinate.longitude,
+              }}
               key={marker.key}
             />
-          )}
-        </MapView>
-        <View style={styles.headLine}>
-          <Text style={styles.textHeadline}>מפת הדיווחים</Text>
-          <Text> {countMarkers} דיווחים</Text>
+          ))}
+        <Marker
+          title={"המיקום שלי"}
+          image={my}
+          coordinate={{
+            latitude: myLocation.latitude,
+            longitude: myLocation.longitude,
+          }}
+          key={"myLocation"}
+        />
+      </MapView>
+      <HeaderFire navigation={navigation} style={styles.header} />
+      <View style={styles.headLine}>
+          <Pressable style={styles.back}>
+            <Button
+              type="outline"
+              title=" "
+            />
+          </Pressable>
+          <Text style={styles.textHeadline}> מפת הדיווחים</Text>
+          <Text style={styles.underText}>{countMarkers} אירועים</Text>
         </View>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.loaderBack}>
-        <Image source={loader} style={styles.loader} />
-      </View>
-    );
-  }
+    </View>
+  );
 };
 
-export default RealTimeScreen;
+export default connect(mapStateToProps)(RealTimeScreen);
 
 RealTimeScreen.propTypes = {
   provider: ProviderPropType,
@@ -121,7 +96,7 @@ RealTimeScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
+    // justifyContent: "flex-end",
     alignItems: "center",
   },
   loaderBack: {
@@ -142,14 +117,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: 400,
     position: "absolute",
-    top: 50,
+    top: 100,
   },
   textHeadline: {
     color: "white",
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
-    width: 400,
+    width: 300,
+    height:50
+  },
+  back: {
+    marginLeft: 15,
+  },
+  underText: {
+    color: "yellow",
+    fontSize: 14,
+    fontWeight: "700",
+    textAlign:"center",
+    position: "absolute",
+    marginTop: 40,
+    marginLeft: "31%"
   },
   bubble: {
     backgroundColor: "rgba(168,183,255,0.7)",
@@ -182,11 +170,19 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: "transparent",
   },
-  header:{
-    position:'absolute',
+  header: {
+    position: "absolute",
     marginBottom: 500,
     zIndex: 1000,
     marginTop: 200,
+  },
+  counter:{
+    position:"absolute",
+    marginTop: 50,
+    color: "black",
+    backgroundColor: "green",
+    height: 30,
+    width: 30
   }
 });
 
@@ -351,4 +347,3 @@ const customStyle = [
     ],
   },
 ];
-

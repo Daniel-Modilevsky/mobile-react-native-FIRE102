@@ -9,8 +9,6 @@ import {
   Pressable,
 } from "react-native";
 import { connect } from "react-redux";
-import store from "../reducers/store";
-import axios from "axios";
 import { Button } from "react-native-elements";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -37,43 +35,47 @@ function mapStateToProps(state) {
     marker: state.map.marker,
     userName: state.user.userName,
     phoneNumber: state.user.phoneNumber,
+    option: state.map.type,
+    photo: state.map.photoUrl,
   };
 }
 
-const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
-  //const ReportScreen = ({ navigation }, fullname, phone, location, type) => {
-
+const ReportScreen = ({
+  userName,
+  phoneNumber,
+  marker,
+  navigation,
+  option,
+  photo,
+}) => {
   const [report, setReport] = React.useState({});
-
+  const [fetchedMarker, setMarker] = React.useState(marker);
+  const [localType, setLocalType] = React.useState("none");
+  const [note, setNote] = React.useState("אין");
+  let tempReport = {
+    userName: userName,
+    phoneNumber: phoneNumber,
+    marker: marker,
+    type: localType,
+    time: getTime(),
+    comment: note,
+    image: photo,
+  };
+  
   useEffect(() => {
-    setReport({
-      userName: userName,
-      phoneNumber: phoneNumber,
-      marker: marker,
-      type: "שריפה",
-      time: getTime(),
-      comment: "none",
-      image:
-        "https://boston.cbslocal.com/wp-content/uploads/sites/3859903/2021/06/lawrence-fire-pic-@jamie1Kelley.jpg?w=1024",
-    });
-    temp();
+    customType();
+    setMarker(marker);
   }, []);
 
-  const temp = async () => {
-    const a = await AsyncStorage.getItem("userName");
-    const b = await AsyncStorage.getItem("phoneNumber");
-    console.log(a);
-    console.log(b);
-  };
-
   const sendReport = () => {
+    try{
     fetch("https://fire102.herokuapp.com/api/reports", {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(report),
+      body: JSON.stringify(tempReport),
     })
       .then(function (response) {
         console.log(response);
@@ -88,6 +90,81 @@ const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
         );
         throw error;
       });
+    }catch(error){
+      console.log(error);
+    }
+  };
+
+  const sendMarker = () => {
+    try{
+      fetch("https://fire102.herokuapp.com/api/markers", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fetchedMarker),
+      })
+        .then(function (response) {
+          console.log(response);
+          return response.json();
+        })
+        .then(function (json) {
+          console.log(json);
+        })
+        .catch(function (error) {
+          console.log(
+            "There has been a problem with your fetch operation: " + error.message
+          );
+          throw error;
+        });
+    }catch(error){
+      console.log(error);
+    }
+   
+  };
+
+  const customType = () => {
+    switch (option) {
+      case "fire-field":
+        setLocalType("שריפה שטח פתוח");
+        break;
+
+      case "fire-urban":
+        setLocalType("שריפה שטח אורבני");
+        break;
+      case "rescue":
+        setLocalType("חילוץ");
+        break;
+
+      case "crash":
+        setLocalType("תאונה");
+        break;
+
+      default:
+        setLocalType("מפגע");
+        break;
+    }
+  };
+
+  const confirm = () => {
+    setReport({
+      userName: userName,
+      phoneNumber: phoneNumber,
+      marker: marker,
+      type: localType,
+      time: getTime(),
+      comment: note,
+      image: photo,
+    });
+    tempReport.comment = note;
+    tempReport.type = localType;
+
+    console.log("report");
+    console.log(tempReport);
+    sendMarker();
+    sendReport();
+    navigation.navigate("Confirmation");
   };
 
   return (
@@ -95,9 +172,12 @@ const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
       <View style={styles.form}>
         <Text style={styles.screenText}> פרטי דיווח </Text>
 
-        <View style={styles.field}><Text style={styles.textFields}> {userName} </Text></View>
-        <View style={styles.field}><Text style={styles.textFields}> {phoneNumber} </Text></View>
-        {/* <View style={styles.field}><Text style={styles.textFields}> {location} </Text></View> */}
+        <View style={styles.field}>
+          <Text style={styles.textFields}> {userName} </Text>
+        </View>
+        <View style={styles.field}>
+          <Text style={styles.textFields}> {phoneNumber} </Text>
+        </View>
         <View style={styles.field}>
           <Text style={styles.textFields}>
             {marker.displayName.length > 40
@@ -105,16 +185,21 @@ const ReportScreen = ({ userName, phoneNumber, marker, navigation }) => {
               : marker.displayName}
           </Text>
         </View>
-        <View style={styles.field}><Text style={styles.textFields}> {report.type} </Text></View>
-        <View style={styles.field}><Text style={styles.textFields}> {getTime()} </Text></View>
-        <TextInput style={styles.inputField} placeholder="הערות" multiline={true} />
-        <TouchableOpacity style={styles.confirmBtn} onPress={() => navigation.navigate("Confirmation")}>
-        <Text style={styles.screenText}>דווח</Text>
-        </TouchableOpacity>
-{/* 
-        <TouchableOpacity style={styles.confirmBtn} onPress={sendReport}>
+        <View style={styles.field}>
+          <Text style={styles.textFields}> {localType} </Text>
+        </View>
+        <View style={styles.field}>
+          <Text style={styles.textFields}> {getTime()} </Text>
+        </View>
+        <TextInput
+          style={styles.inputField}
+          placeholder="הערות"
+          multiline={true}
+          onChangeText={(text) => setNote(text)}
+        />
+        <TouchableOpacity style={styles.confirmBtn} onPress={() => confirm()}>
           <Text style={styles.screenText}>דווח</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <View style={styles.headLine}>
           <Pressable style={styles.back}>
             <Button
@@ -161,9 +246,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginBottom: 10,
-    // whiteSpace: "nowrap",
-    // overflow:"hidden",
-    // textOverflow: "ellipsis"
   },
   headLine: {
     backgroundColor: "rgba(70,130,180,0.7)",
@@ -203,7 +285,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#fff",
-    borderStyle: "solid"
+    borderStyle: "solid",
   },
   inputField: {
     textAlign: "center",

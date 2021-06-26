@@ -12,8 +12,24 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Button } from "react-native-elements";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import { AddPhoto } from "../components/map/map.actions";
 
-const CameraScreen = ({ navigation }) => {
+/*REDUCER-CONNECTION*/
+function mapStateToProps(state) {
+  return {
+    photoUrl: state.map.photoUrl,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setterPhoto: (photo) => dispatch(AddPhoto(photo)),
+  };
+}
+
+
+const CameraScreen = ({ navigation, photoUrl, setterPhoto }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [picTaken, setPicTaken] = useState(null);
   const [type] = useState(Camera.Constants.Type.back);
@@ -34,6 +50,12 @@ const CameraScreen = ({ navigation }) => {
       setPicTaken(false);
     }
   };
+
+  const confirm = () => {
+    setterPhoto(picTaken);
+    navigation.navigate("Report");
+  }
+
 
   if (hasPermission === null) {
     return <View />;
@@ -116,7 +138,7 @@ const CameraScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Report")}
+            onPress={() => confirm()}
             style={{
               width: 100,
               borderRadius: 50,
@@ -150,7 +172,8 @@ const CameraScreen = ({ navigation }) => {
     );
 };
 
-export default CameraScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(CameraScreen);
+
 
 const styles = StyleSheet.create({
   screen: {

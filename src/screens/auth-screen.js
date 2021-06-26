@@ -7,15 +7,22 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
+  Dimensions,
+
 } from "react-native";
 import logo from "../../assets/firelogo.jpg";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import validator from "validator";
 import { connect } from "react-redux";
 import { login, register } from "../components/authentication/auth.actions";
+import { SetLocation } from "../components/map/map.actions";
+
 import HeaderFire from "../components/header/header";
 import loader from "../../assets/loader1.gif";
+
+import * as Location from "expo-location";
+const { width, height } = Dimensions.get("window");
+const LONGITUDE_DELTA = (0.01 * width) / height;
+
 
 /*REDUCER-CONNECTION*/
 function mapStateToProps(state) {
@@ -36,6 +43,7 @@ function mapDispatchToProps(dispatch) {
     setterRegister: (userName, email, password, phoneNumber, identityNumer) =>
       dispatch(register(userName, email, password, phoneNumber, identityNumer)),
     setterLogin: () => login(dispatch),
+    setterLocation: (rigion) => dispatch(SetLocation(rigion)),
   };
 }
 
@@ -50,31 +58,65 @@ const AuthScreen = ({
   validationfalg,
   setterRegister,
   setterLogin,
+  setterLocation
 }) => {
   const [currentUserName, setUserName] = useState(userName);
   const [currentPassword, setPassword] = useState(password);
   const [currentEmail, setEmail] = useState(email);
   const [currentPhoneNumber, setPhoneNumber] = useState(phoneNumber);
   const [currentIdentityNumer, setIdentityNumer] = useState(identityNumer);
-  const [currentInVallidMessage, setInVallidMessage] = useState(inVallidMessage);
+  const [currentInVallidMessage, setInVallidMessage] = useState(
+    inVallidMessage
+  );
   const [flagLoader, setFlagLoader] = useState(true);
 
+  const [errorMsg, setErrorMsg] = useState("none");
+  // const [myLocation, setterLocation] = useState({});
 
   useEffect(() => {
+    setMyLocation();
     loadUser();
     setFlagLoader(false);
   }, []);
 
+  const setMyLocation = () => {
+    /*GET PREMITIONS FOR USING CURRENT LOCATION */
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      /*GET CURRENT LOCATION */
+      await Location.getCurrentPositionAsync({}).then((location) => {
+        const region = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: LONGITUDE_DELTA,
+        };
+        setterLocation(region);
+      });
+    })();
+  };
+
   /*EVENT-HANDLERS*/
   const submitHandler = () => {
-    (currentUserName === "none" ||
+    currentUserName === "none" ||
     currentEmail === "none" ||
     currentPhoneNumber === "none" ||
     currentPassword === "none" ||
-    currentIdentityNumer === "none")? setInVallidMessage("נא למלא את כל הטופס, חסרים פרטים"): {};
-    validator.isMobilePhone(currentPhoneNumber)? {} : setInVallidMessage("מספר הטלפון לא תקין");
+    currentIdentityNumer === "none"
+      ? setInVallidMessage("נא למלא את כל הטופס, חסרים פרטים")
+      : {};
+    validator.isMobilePhone(currentPhoneNumber)
+      ? {}
+      : setInVallidMessage("מספר הטלפון לא תקין");
     validator.isEmail(currentEmail) ? {} : setInVallidMessage("מייל לא תקין");
-    validator.isDecimal(currentIdentityNumer)? {} : setInVallidMessage("מספר ת.ז לא תקין");
+    validator.isDecimal(currentIdentityNumer)
+      ? {}
+      : setInVallidMessage("מספר ת.ז לא תקין");
 
     if (
       currentUserName !== "none" &&
@@ -86,7 +128,13 @@ const AuthScreen = ({
       validator.isEmail(currentEmail) &&
       validator.isDecimal(currentIdentityNumer)
     ) {
-      console.log(currentUserName , currentEmail, currentPhoneNumber, currentPassword, currentIdentityNumer);
+      console.log(
+        currentUserName,
+        currentEmail,
+        currentPhoneNumber,
+        currentPassword,
+        currentIdentityNumer
+      );
       saveUser();
       navigation.navigate("Home");
     }
@@ -99,7 +147,13 @@ const AuthScreen = ({
       await AsyncStorage.setItem("password", currentPassword);
       await AsyncStorage.setItem("phoneNumber", currentPhoneNumber);
       await AsyncStorage.setItem("identityNumer", currentIdentityNumer);
-      setterRegister(currentUserName, currentEmail, currentPassword, currentPhoneNumber, currentIdentityNumer);
+      setterRegister(
+        currentUserName,
+        currentEmail,
+        currentPassword,
+        currentPhoneNumber,
+        currentIdentityNumer
+      );
     } catch (error) {
       console.log(error);
     }
@@ -118,17 +172,19 @@ const AuthScreen = ({
     }
   };
 
-  if(flagLoader){
+  if (flagLoader) {
     return (
       <View style={styles.loaderBack}>
         <Image source={loader} style={styles.loader} />
       </View>
     );
-  }else {
-
+  } else {
     return (
       <View style={styles.screen}>
-        <HeaderFire navigation={navigation} style={{ position:'absolute', top:0,}}/>
+        <HeaderFire
+          navigation={navigation}
+          style={{ position: "absolute", top: 0 }}
+        />
         <Image source={logo} style={styles.logo} />
         <Text style={styles.screenText}>רישום למערכת</Text>
         {validationfalg && (
@@ -138,7 +194,7 @@ const AuthScreen = ({
           <TextInput
             style={styles.inputText}
             placeholder="שם מלא..."
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#fff5be"
             onChangeText={(text) => setUserName(text)}
           />
         </View>
@@ -146,7 +202,7 @@ const AuthScreen = ({
           <TextInput
             style={styles.inputText}
             placeholder="סיסמה..."
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#fff5be"
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
           />
@@ -155,7 +211,7 @@ const AuthScreen = ({
           <TextInput
             style={styles.inputText}
             placeholder="תעודת זהות..."
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#fff5be"
             keyboardType="numeric"
             onChangeText={(text) => setIdentityNumer(text)}
           />
@@ -164,7 +220,7 @@ const AuthScreen = ({
           <TextInput
             style={styles.inputText}
             placeholder="אימייל..."
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#fff5be"
             onChangeText={(text) => setEmail(text)}
           />
         </View>
@@ -172,12 +228,15 @@ const AuthScreen = ({
           <TextInput
             style={styles.inputText}
             placeholder="טלפון..."
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#fff5be"
             keyboardType="numeric"
             onChangeText={(text) => setPhoneNumber(text)}
           />
         </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={() => submitHandler()}>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => submitHandler()}
+        >
           <Text style={styles.loginText}>הירשם</Text>
         </TouchableOpacity>
       </View>
@@ -192,7 +251,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: "#282834",
     alignItems: "center",
-    height:"100%"
+    height: "100%",
   },
   screenText: {
     color: "white",

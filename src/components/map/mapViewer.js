@@ -12,9 +12,19 @@ import {
 import MapView, { Marker, ProviderPropType } from "react-native-maps";
 import * as Location from "expo-location";
 
-import WarningIcon from "../../../assets/alerticon2.png";
 import loader from "../../../assets/loader1.gif";
+import myLocation from "../../../assets/myLocation.png";
+import fire from "../../../assets/fire.png";
+import rescue from "../../../assets/rescue.png";
+import acident from "../../../assets/acident.png";
+import WarningIcon from "../../../assets/alerticon2.png";
+
+import { Button } from "react-native-elements";
+import { FontAwesome5 } from '@expo/vector-icons'
 import { SetLocation, ClearMarkers, AddMarker } from "./map.actions";
+
+
+
 const { width, height } = Dimensions.get("window");
 const LONGITUDE_DELTA = (0.01 * width) / height;
 
@@ -26,6 +36,7 @@ function mapStateToProps(state) {
     region: state.map.region,
     counter: state.map.counter,
     markerFlag: state.map.markerFlag,
+    type: state.map.type
   };
 }
 
@@ -48,45 +59,16 @@ const MapViewer = ({
   marker,
   markerFlag,
   counter,
+  type
 }) => {
-  useEffect(() => {
-    /*GET PREMITIONS FOR USING CURRENT LOCATION */
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
 
-      /*GET CURRENT LOCATION */
-      await Location.getCurrentPositionAsync({}).then((location) => {
-        // setCurrentLocationFlag(true);
-        const region = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: LONGITUDE_DELTA,
-        };
-        setterLocation(region);
-        Location.reverseGeocodeAsync({
-          latitude: region.latitude,
-          longitude: region.longitude,
-        }).then((displayNmae) => {
-          fullDisplayName =
-            displayNmae[0].street +
-            " , " +
-            displayNmae[0].name +
-            " , " +
-            displayNmae[0].city +
-            " , " +
-            displayNmae[0].region +
-            " , " +
-            displayNmae[0].country;
-        });
-      });
-    })();
+  const [imageIcon, setImageIcon] = useState(null);
+
+  useEffect(() => {
+    customImage();
   }, []);
 
+  
   /*EVENTS-HANDLER*/
   /**
    * Clear Markers & Hide continue buttons till put 1 coordinate
@@ -96,6 +78,32 @@ const MapViewer = ({
   const clearMarkers = () => {
     setterCleanMarkers();
   };
+
+  const customImage = () => {
+    switch (type) {
+      case "fire-urban" :
+        setImageIcon(fire);
+        break;
+
+      case "fire-field":
+        setImageIcon(fire);
+        break;
+
+      case "rescue":
+        setImageIcon(rescue);
+        break;
+
+      case "crash":
+        setImageIcon(acident);
+        break;
+
+      default:
+        setImageIcon(WarningIcon);
+        break;
+    }
+  };
+
+
 
   /**
    * Create new marker from user press on the map
@@ -112,9 +120,10 @@ const MapViewer = ({
       },
       displayName: "",
     };
+
     Location.reverseGeocodeAsync({
-      latitude: marker.coordinate.latitude,
-      longitude: marker.coordinate.longitude,
+      latitude: newMarker.coordinate.latitude,
+      longitude: newMarker.coordinate.longitude,
     }).then((displayNmae) => {
       newMarker.displayName =
         displayNmae[0].street +
@@ -129,13 +138,12 @@ const MapViewer = ({
     });
     return newMarker;
   };
-
   const onMapPress = (e) => {
     const newMarker = generateMarkers(e.nativeEvent.coordinate);
     setterMarker(newMarker);
   };
 
-  if (currentLocationFlag) {
+  // if (currentLocationFlag) {
     return (
       <View style={styles.container}>
         <MapView
@@ -148,15 +156,27 @@ const MapViewer = ({
           {currentLocationFlag && (
             <Marker
               title={marker.key}
-              image={WarningIcon}
+              image={imageIcon}
               coordinate={marker.coordinate}
               key={marker.key}
             />
           )}
+          <Marker
+              title={'המיקום שלי'}
+              image={myLocation}
+              coordinate={{latitude:region.latitude, longitude:region.longitude}}
+              key={'myLocation'}
+            />
         </MapView>
         <View style={styles.headLine}>
-          <Text style={styles.textHeadline}>איפה האירוע?</Text>
-        </View>
+        <Pressable style={styles.back}>
+          <Button   type="outline" onPress={() => navigation.navigate("Option")}
+            icon={ <FontAwesome5 name="arrow-right" size={15} color="#fff"/>}
+          />
+        </Pressable>
+        <Text style={styles.textHeadline}> איפה האירוע?</Text>
+        <Text style={styles.leftText}>2/5</Text>
+      </View>
         {markerFlag && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -175,13 +195,13 @@ const MapViewer = ({
         )}
       </View>
     );
-  } else {
-    return (
-      <View style={styles.loaderBack}>
-        <Image source={loader} style={styles.loader} />
-      </View>
-    );
-  }
+  // } else {
+  //   return (
+  //     <View style={styles.loaderBack}>
+  //       <Image source={loader} style={styles.loader} />
+  //     </View>
+  //   );
+  // }
 };
 
 MapViewer.propTypes = {
@@ -205,7 +225,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   headLine: {
-    backgroundColor: "rgba(102,0,0,0.7)",
+    backgroundColor: "rgba(70,130,180,0.7)",
     paddingVertical: 10,
     borderRadius: 20,
     flexDirection: "row",
@@ -218,7 +238,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
-    width: 400,
+    width: 300,
+  },
+  back:{
+    marginLeft: 15
+  },
+  leftText:{
+    color: "yellow",
+    fontSize: 20,
+    fontWeight: "700",
   },
   bubble: {
     backgroundColor: "rgba(168,183,255,0.7)",
@@ -256,162 +284,72 @@ const styles = StyleSheet.create({
 const customStyle = [
   {
     elementType: "geometry",
-    stylers: [
-      {
-        color: "#242f3e",
-      },
-    ],
   },
   {
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#746855",
-      },
-    ],
   },
   {
     elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#242f3e",
-      },
-    ],
   },
   {
     featureType: "administrative.locality",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#d59563",
-      },
-    ],
   },
   {
     featureType: "poi",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#d59563",
-      },
-    ],
   },
   {
     featureType: "poi.park",
     elementType: "geometry",
-    stylers: [
-      {
-        color: "#263c3f",
-      },
-    ],
   },
   {
     featureType: "poi.park",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#6b9a76",
-      },
-    ],
   },
   {
     featureType: "road",
     elementType: "geometry",
-    stylers: [
-      {
-        color: "#38414e",
-      },
-    ],
   },
   {
     featureType: "road",
     elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#212a37",
-      },
-    ],
   },
   {
     featureType: "road",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#9ca5b3",
-      },
-    ],
   },
   {
     featureType: "road.highway",
     elementType: "geometry",
-    stylers: [
-      {
-        color: "#746855",
-      },
-    ],
   },
   {
     featureType: "road.highway",
     elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#1f2835",
-      },
-    ],
   },
   {
     featureType: "road.highway",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#f3d19c",
-      },
-    ],
   },
   {
     featureType: "transit",
     elementType: "geometry",
-    stylers: [
-      {
-        color: "#2f3948",
-      },
-    ],
   },
   {
     featureType: "transit.station",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#d59563",
-      },
-    ],
   },
   {
     featureType: "water",
     elementType: "geometry",
-    stylers: [
-      {
-        color: "#17263c",
-      },
-    ],
   },
   {
     featureType: "water",
     elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#515c6d",
-      },
-    ],
   },
   {
     featureType: "water",
     elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#17263c",
-      },
-    ],
   },
 ];
 

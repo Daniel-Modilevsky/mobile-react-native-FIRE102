@@ -10,6 +10,7 @@ import TakePictureScreen from "../screens/take-picture-screen";
 import CameraScreen from "../screens/camera-screen";
 import ReportScreen from "../screens/report-screen";
 import AuthScreen from "../screens/auth-screen";
+import TempScreen from "../screens/realTime-screen";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -97,6 +98,18 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
+
+      <BottomTab.Screen
+        name="Temp"
+        component={TempScreen}
+        options={{
+          tabBarLabel: "Temp",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="music" color={color} size={size} />
+          ),
+        }}
+      />
+
     </BottomTab.Navigator>
   );
 };

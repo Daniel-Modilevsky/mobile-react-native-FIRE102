@@ -1,13 +1,31 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { connect } from "react-redux";
+import { ClearReport } from '../components/map/map.actions';
 
-const ConfirmationScreen = ({ navigation }) => {
+/*REDUCER-CONNECTION*/
+
+  function mapDispatchToProps(dispatch) {
+    return {
+      setterReport: () => dispatch(ClearReport()),
+    };
+  }
+
+
+const ConfirmationScreen = ({ navigation, setterReport }) => {
+
+    const cleanMap = () => {
+        setterReport();
+        navigation.navigate("Home");
+    }
+
+
     return (
         <View style={styles.screen}>
             <Text style={styles.screenText}>הדיווח הועבר בהצלחה</Text>
             <Text style={styles.screenText}>תודה</Text>
             <TouchableOpacity
-                onPress={() => navigation.navigate("Home")}
+                onPress={() => cleanMap()}
                 style={styles.button}>
                 <Text style={styles.text}> אישור </Text>
             </TouchableOpacity>
@@ -15,7 +33,9 @@ const ConfirmationScreen = ({ navigation }) => {
     );
 };
 
-export default ConfirmationScreen;
+export default connect(null, mapDispatchToProps)(ConfirmationScreen)
+
+
 
 const styles = StyleSheet.create({
     screen: {

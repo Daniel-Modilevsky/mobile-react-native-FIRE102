@@ -49,3 +49,13 @@ export function AddType(type) {
 export function AddPhoto(photo) {
   return { type: "ADD_PHOTO", payload: photo };
 }
+
+/**
+ * Clear Report from state
+ *
+ * @return {dispatch} Type + payload.
+ */
+ export function ClearReport() {
+   console.log("action");
+  return { type: "CLEAR_REPORT", payload: {} };
+}

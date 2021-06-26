@@ -53,6 +53,8 @@ const CameraScreen = ({ navigation, photoUrl, setterPhoto }) => {
 
   const confirm = () => {
     setterPhoto(picTaken);
+    // setPicTaken(null);
+    setPicTaken(false);
     navigation.navigate("Report");
   }
 

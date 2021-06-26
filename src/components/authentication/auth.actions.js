@@ -17,15 +17,15 @@ export function register(
   password,
   phoneNumber,
   identityNumer,
-  testing = false,
+  testing = false
 ) {
   const params = {
     userName: userName,
     email: email,
     password: password,
     phoneNumber: phoneNumber,
-    identityNumer: identityNumer
-  }
+    identityNumer: identityNumer,
+  };
 
   if (testing) {
     return {
@@ -34,13 +34,13 @@ export function register(
     };
   }
 
-  fetch('https://fire102.herokuapp.com/api/signup', {
-    method: 'POST',
-    mode: 'cors',
+  fetch("https://fire102.herokuapp.com/api/signup", {
+    method: "POST",
+    mode: "cors",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
   })
     .then(function (response) {
       return response.json();
@@ -76,21 +76,19 @@ export async function login(dispatch) {
     const params = {
       userName: userName,
       password: password,
-    }
-    fetch('https://fire102.herokuapp.com/api/login', {
-      method: 'POST',
-      mode: 'cors',
+    };
+    fetch("https://fire102.herokuapp.com/api/login", {
+      method: "POST",
+      mode: "cors",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(params)
+      body: JSON.stringify(params),
     })
       .then(function (response) {
         return response.json();
       })
-      .then(function (user) {
-        console.log(user);
-      })
+      .then(function (user) {})
       .catch(function (error) {
         console.log(
           "There has been a problem with your fetch operation: " + error.message

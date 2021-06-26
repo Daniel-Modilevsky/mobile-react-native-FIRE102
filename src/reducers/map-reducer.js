@@ -62,8 +62,18 @@ const MapReducer = (state = initState, action) => {
       return {
         ...state,
         photoUrl: action.payload,
+      };
+
+    case "CLEAR_REPORT":
+      return {
+        ...state,
+        marker: initState.marker,
+        counter: initState.counter,
+        markerFlag: initState.markerFlag,
+        type: initState.type,
+        photoUrl: initState.photoUrl
       }
-        ;
+    
     default:
       return state;
   }

@@ -55,11 +55,14 @@ const ReportScreen = ({
   let tempReport = {
     userName: userName,
     phoneNumber: phoneNumber,
-    marker: marker,
+    marker: {
+      latitude: marker.coordinate.latitude,
+      longitude: marker.coordinate.latitude
+    },
     type: localType,
     time: getTime(),
     comment: note,
-    image: photo,
+    image: photo.base64,
   };
 
   useEffect(() => {
@@ -78,11 +81,9 @@ const ReportScreen = ({
         body: JSON.stringify(tempReport),
       })
         .then(function (response) {
-          console.log(response);
           return response.json();
         })
         .then(function (json) {
-          console.log(json);
         })
         .catch(function (error) {
           console.log(
@@ -106,11 +107,9 @@ const ReportScreen = ({
         body: JSON.stringify(fetchedMarker),
       })
         .then(function (response) {
-          console.log(response);
           return response.json();
         })
         .then(function (json) {
-          console.log(json);
         })
         .catch(function (error) {
           console.log(
@@ -148,20 +147,9 @@ const ReportScreen = ({
   };
 
   const confirm = () => {
-    setReport({
-      userName: userName,
-      phoneNumber: phoneNumber,
-      marker: marker,
-      type: localType,
-      time: getTime(),
-      comment: note,
-      image: photo,
-    });
     tempReport.comment = note;
     tempReport.type = localType;
-
-    console.log("report");
-    console.log(tempReport);
+    tempReport.image = "https://www.ccacoalition.org/sites/default/files/styles/main_image/public/burning-field_1025x512.png?itok=GFoTHK7E";
     sendMarker();
     sendReport();
     navigation.navigate("Confirmation");

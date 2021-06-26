@@ -143,7 +143,6 @@ const MapViewer = ({
     setterMarker(newMarker);
   };
 
-  // if (currentLocationFlag) {
     return (
       <View style={styles.container}>
         <MapView
@@ -195,13 +194,6 @@ const MapViewer = ({
         )}
       </View>
     );
-  // } else {
-  //   return (
-  //     <View style={styles.loaderBack}>
-  //       <Image source={loader} style={styles.loader} />
-  //     </View>
-  //   );
-  // }
 };
 
 MapViewer.propTypes = {

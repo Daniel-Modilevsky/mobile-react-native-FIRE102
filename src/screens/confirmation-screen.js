@@ -5,11 +5,11 @@ import { ClearReport } from '../components/map/map.actions';
 
 /*REDUCER-CONNECTION*/
 
-  function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {
     return {
-      setterReport: () => dispatch(ClearReport()),
+        setterReport: () => dispatch(ClearReport()),
     };
-  }
+}
 
 
 const ConfirmationScreen = ({ navigation, setterReport }) => {

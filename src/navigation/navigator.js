@@ -27,7 +27,7 @@ export default function Navigator() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator  drawerContent={props => <SliderMenu {...props} />}  initialRouteName="Auth" drawerStyle={{
+      <Drawer.Navigator drawerContent={props => <SliderMenu {...props} />} initialRouteName="Auth" drawerStyle={{
         backgroundColor: '#fff',
         width: 240,
       }}>

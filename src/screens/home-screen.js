@@ -8,7 +8,7 @@ import HeaderFire from "../components/header/header";
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
-      <HeaderFire navigation={navigation} style={{ position:'absolute', top:0,}}/>
+      <HeaderFire navigation={navigation} style={{ position: 'absolute', top: 0, }} />
       <Pressable onPress={() => navigation.navigate("Option")} style={styles.image}>
         <Image source={button} style={styles.logo} />
       </Pressable>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     height: 400,
     width: 400,
   },
-  image:{
+  image: {
     marginTop: 150
   },
 });

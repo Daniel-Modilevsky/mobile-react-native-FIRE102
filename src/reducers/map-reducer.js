@@ -73,7 +73,7 @@ const MapReducer = (state = initState, action) => {
         type: initState.type,
         photoUrl: initState.photoUrl
       }
-    
+
     default:
       return state;
   }

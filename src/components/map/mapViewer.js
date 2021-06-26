@@ -24,9 +24,33 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { SetLocation, ClearMarkers, AddMarker } from "./map.actions";
 
 
-
 const { width, height } = Dimensions.get("window");
 const LONGITUDE_DELTA = (0.01 * width) / height;
+
+const getTime = () => {
+  let date = new Date();
+
+  let days = "" + date.getDay();
+  if (days.length < 2) days = "0" + days;
+
+  let months = "" + date.getMonth();
+  if (months.length < 2) months = "0" + months;
+
+  let years = "" + date.getFullYear();
+
+  let hours = "" + date.getHours();
+  if (hours.length < 2) hours = "0" + hours;
+
+  let minutes = "" + date.getMinutes();
+  if (minutes.length < 2) minutes = "0" + minutes;
+
+  let seconds = "" + date.getSeconds();
+  if (seconds.length < 2) seconds = "0" + seconds;
+
+  let time = `${years}${months}${days}${hours}${minutes}${seconds}`;
+
+  return time;
+};
 
 /*REDUCER-CONNECTION*/
 function mapStateToProps(state) {
@@ -63,12 +87,13 @@ const MapViewer = ({
 }) => {
 
   const [imageIcon, setImageIcon] = useState(null);
+  const currTime = getTime();
 
   useEffect(() => {
     customImage();
   }, []);
 
-  
+
   /*EVENTS-HANDLER*/
   /**
    * Clear Markers & Hide continue buttons till put 1 coordinate
@@ -81,7 +106,7 @@ const MapViewer = ({
 
   const customImage = () => {
     switch (type) {
-      case "fire-urban" :
+      case "fire-urban":
         setImageIcon(fire);
         break;
 
@@ -113,7 +138,7 @@ const MapViewer = ({
   const generateMarkers = (Coordinate) => {
     const { latitude, longitude } = Coordinate;
     const newMarker = {
-      key: `${1 + counter} דיווח`,
+      key: currTime,
       coordinate: {
         latitude: latitude,
         longitude: longitude,
@@ -143,57 +168,57 @@ const MapViewer = ({
     setterMarker(newMarker);
   };
 
-    return (
-      <View style={styles.container}>
-        <MapView
-          initialRegion={region}
-          onPress={onMapPress}
-          provider={provider}
-          style={styles.map}
-          customMapStyle={customStyle}
-        >
-          {currentLocationFlag && (
-            <Marker
-              title={marker.key}
-              image={imageIcon}
-              coordinate={marker.coordinate}
-              key={marker.key}
-            />
-          )}
+  return (
+    <View style={styles.container}>
+      <MapView
+        initialRegion={region}
+        onPress={onMapPress}
+        provider={provider}
+        style={styles.map}
+        customMapStyle={customStyle}
+      >
+        {currentLocationFlag && (
           <Marker
-              title={'המיקום שלי'}
-              image={myLocation}
-              coordinate={{latitude:region.latitude, longitude:region.longitude}}
-              key={'myLocation'}
-            />
-        </MapView>
-        <View style={styles.headLine}>
+            title={"דיווח"}
+            image={imageIcon}
+            coordinate={marker.coordinate}
+            key={marker.key}
+          />
+        )}
+        <Marker
+          title={'המיקום שלי'}
+          image={myLocation}
+          coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+          key={'myLocation'}
+        />
+      </MapView>
+      <View style={styles.headLine}>
         <Pressable style={styles.back}>
-          <Button   type="outline" onPress={() => navigation.navigate("Option")}
-            icon={ <FontAwesome5 name="arrow-right" size={15} color="#fff"/>}
+          <Button type="outline" onPress={() => navigation.navigate("Option")}
+            icon={<FontAwesome5 name="arrow-right" size={15} color="#fff" />}
           />
         </Pressable>
         <Text style={styles.textHeadline}> איפה האירוע?</Text>
         <Text style={styles.leftText}>2/5</Text>
       </View>
-        {markerFlag && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => clearMarkers()}
-              style={styles.bubble}
-            >
-              <Text>מחיקת סימונים</Text>
-            </TouchableOpacity>
-            <Pressable
-              onPress={() => navigation.navigate("Camera")}
-              style={styles.bubble2}
-            >
-              <Text>שמירת סימון</Text>
-            </Pressable>
-          </View>
-        )}
-      </View>
-    );
+      {markerFlag && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => clearMarkers()}
+            style={styles.bubble}
+          >
+            <Text>מחיקת סימונים</Text>
+          </TouchableOpacity>
+          <Pressable
+            onPress={() => navigation.navigate("Camera")}
+            style={styles.bubble2}
+          >
+            <Text>שמירת סימון</Text>
+          </Pressable>
+        </View>
+      )}
+    </View>
+  );
 };
 
 MapViewer.propTypes = {
@@ -232,10 +257,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     width: 300,
   },
-  back:{
+  back: {
     marginLeft: 15
   },
-  leftText:{
+  leftText: {
     color: "yellow",
     fontSize: 20,
     fontWeight: "700",

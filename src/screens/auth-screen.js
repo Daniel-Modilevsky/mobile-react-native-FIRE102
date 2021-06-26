@@ -128,13 +128,6 @@ const AuthScreen = ({
       validator.isEmail(currentEmail) &&
       validator.isDecimal(currentIdentityNumer)
     ) {
-      console.log(
-        currentUserName,
-        currentEmail,
-        currentPhoneNumber,
-        currentPassword,
-        currentIdentityNumer
-      );
       saveUser();
       navigation.navigate("Home");
     }

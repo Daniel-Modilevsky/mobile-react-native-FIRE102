@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Pressable,
-} from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from "react-native";
 import { Camera, takePictureAsync } from "expo-camera";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -33,18 +26,20 @@ const CameraScreen = ({ navigation, photoUrl, setterPhoto }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [picTaken, setPicTaken] = useState(null);
   const [type] = useState(Camera.Constants.Type.back);
+  const camera = useRef(null);
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
-  }, []);
+
+  }, [type]);
 
   const takePicture = async () => {
-    if (camera) {
+    if (camera.current) {
       const options = { quality: 1, base64: true };
-      const pic = await camera.takePictureAsync(options);
+      const pic = await camera.current.takePictureAsync(options);
       setPicTaken(pic);
     } else {
       setPicTaken(false);
@@ -53,7 +48,6 @@ const CameraScreen = ({ navigation, photoUrl, setterPhoto }) => {
 
   const confirm = () => {
     setterPhoto(picTaken);
-    // setPicTaken(null);
     setPicTaken(false);
     navigation.navigate("Report");
   }
@@ -72,7 +66,7 @@ const CameraScreen = ({ navigation, photoUrl, setterPhoto }) => {
           style={styles.camera}
           type={type}
           ref={(r) => {
-            camera = r;
+            camera.current = r;
           }}
         >
           <View style={styles.buttonContainer}>
@@ -96,7 +90,7 @@ const CameraScreen = ({ navigation, photoUrl, setterPhoto }) => {
           <Text style={styles.textHeadline}> תיעוד האירוע</Text>
           <Text style={styles.leftText}>3/5</Text>
         </View>
-      </View>
+      </View >
     );
   else
     return (

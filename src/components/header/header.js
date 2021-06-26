@@ -1,24 +1,22 @@
 import React from "react";
 import { View, StyleSheet, Button, Pressable, TouchableOpacity } from "react-native";
 import { Header } from "react-native-elements";
-// import MenuBar from "./menu";
 import { FontAwesome5 } from '@expo/vector-icons'
 
-const HeaderFire = ({navigation}) => {
+const HeaderFire = ({ navigation }) => {
   return (
     <View>
       <Header
         backgroundColor="#EC4646"
-        //#4682B4
         leftComponent={
-          <TouchableOpacity  onPress={() => navigation.openDrawer()}>
-            <FontAwesome5 name="bars" size={24} color="#fff"/>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <FontAwesome5 name="bars" size={24} color="#fff" />
           </TouchableOpacity>
         }
         centerComponent={{ text: "FIRE 102", style: styles.centerComponent }}
         rightComponent={
-          <TouchableOpacity  onPress={() => navigation.navigate("Home")}>
-            <FontAwesome5 name="home" size={24} color="#fff"/>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <FontAwesome5 name="home" size={24} color="#fff" />
           </TouchableOpacity>
         }
       />

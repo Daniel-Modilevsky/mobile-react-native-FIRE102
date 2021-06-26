@@ -17,40 +17,40 @@ import logo from "../../../assets/firelogo.jpg";
 const name = "none";
 
 export default SliderMenu = (props) => (
-    
+
   <ScrollView>
-      <ImageBackground
-        source={backgroundPhoto}
-        style={{height: 250, width: 400, paddingTop: 48}}
-      >
-        <Image  
-            source={logo}
-            style={styles.profile}
-        />
-        {name!=="none" && <Text style={styles.userName}> {name} </Text>}
-      </ImageBackground>
-      <View style={styles.section}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Home")} style={styles.nav}>
-            <Text style={styles.navText}>דיווח</Text>
-            <FontAwesome5 name="home" size={24} color="#666" style={styles.row} />
-        </TouchableOpacity>
+    <ImageBackground
+      source={backgroundPhoto}
+      style={{ height: 250, width: 400, paddingTop: 48 }}
+    >
+      <Image
+        source={logo}
+        style={styles.profile}
+      />
+      {name !== "none" && <Text style={styles.userName}> {name} </Text>}
+    </ImageBackground>
+    <View style={styles.section}>
+      <TouchableOpacity onPress={() => props.navigation.navigate("Home")} style={styles.nav}>
+        <Text style={styles.navText}>דיווח</Text>
+        <FontAwesome5 name="home" size={24} color="#666" style={styles.row} />
+      </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => props.navigation.navigate("Real")} style={styles.nav}>
-            <Text style={styles.navText}>מפת זמן אמת</Text>
-            <FontAwesome5 name="map" size={24} color="#666"  style={styles.row}/>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => props.navigation.navigate("Real")} style={styles.nav}>
+        <Text style={styles.navText}>מפת זמן אמת</Text>
+        <FontAwesome5 name="map" size={24} color="#666" style={styles.row} />
+      </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => props.navigation.navigate("Auth")} style={styles.nav}>
-            <Text style={styles.navText}>פרופיל</Text>
-            <FontAwesome5 name="user" size={24} color="#666"  style={styles.row}/>
-        </TouchableOpacity>   
-      </View>
+      <TouchableOpacity onPress={() => props.navigation.navigate("Auth")} style={styles.nav}>
+        <Text style={styles.navText}>פרופיל</Text>
+        <FontAwesome5 name="user" size={24} color="#666" style={styles.row} />
+      </TouchableOpacity>
+    </View>
   </ScrollView>
 );
 
 const styles = StyleSheet.create({
   container: {
-    flex:1
+    flex: 1
   },
   drawerContent: {
     flex: 1,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
     fontWeight: "bold",
   },
-  profile:{
+  profile: {
     width: 100,
     height: 100,
     borderRadius: 50,
@@ -71,14 +71,14 @@ const styles = StyleSheet.create({
     marginTop: 60,
 
   },
-  name:{
-    color:"#fff",
+  name: {
+    color: "#fff",
     fontSize: 18,
     fontWeight: "800",
     marginVertical: 8,
-    marginTop:190,
-    marginLeft:100,
-    height:50,
+    marginTop: 190,
+    marginLeft: 100,
+    height: 50,
     position: "absolute"
   },
   row: {
@@ -92,14 +92,14 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginTop: 10,
   },
-  nav:{
+  nav: {
     marginTop: 30,
     flexDirection: "row",
   },
-  navText:{
+  navText: {
     fontSize: 22,
     fontWeight: "600",
-    color: "#666" 
+    color: "#666"
   },
   Paragraph: {
     fontWeight: "bold",

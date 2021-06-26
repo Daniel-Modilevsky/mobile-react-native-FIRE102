@@ -55,7 +55,6 @@ export function AddPhoto(photo) {
  *
  * @return {dispatch} Type + payload.
  */
- export function ClearReport() {
-   console.log("action");
+export function ClearReport() {
   return { type: "CLEAR_REPORT", payload: {} };
 }

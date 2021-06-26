@@ -46,7 +46,6 @@ export function register(
       return response.json();
     })
     .then(function (json) {
-      console.log(json);
     })
     .catch(function (error) {
       console.log(
@@ -88,7 +87,7 @@ export async function login(dispatch) {
       .then(function (response) {
         return response.json();
       })
-      .then(function (user) {})
+      .then(function (user) { })
       .catch(function (error) {
         console.log(
           "There has been a problem with your fetch operation: " + error.message

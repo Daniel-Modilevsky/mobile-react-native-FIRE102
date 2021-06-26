@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { AddType } from "../components/map/map.actions"; 
+import { AddType } from "../components/map/map.actions";
 import { connect } from "react-redux";
 
 

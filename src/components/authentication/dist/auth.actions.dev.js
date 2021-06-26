@@ -38,10 +38,8 @@ function register(userName, email, password, phoneNumber, identityNumer) {
     },
     body: JSON.stringify(params)
   }).then(function (response) {
-    console.log(response);
     return response.json();
   }).then(function (json) {
-    console.log(json);
   })["catch"](function (error) {
     console.log("There has been a problem with your fetch operation: " + error.message);
     throw error;

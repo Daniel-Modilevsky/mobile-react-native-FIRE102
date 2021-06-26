@@ -30,7 +30,7 @@ const TakePictureScreen = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
       <View style={styles.headLine}>
-          <Text style={styles.textHeadline}> צילום האירוע</Text>
+        <Text style={styles.textHeadline}> צילום האירוע</Text>
       </View>
     </View>
   );

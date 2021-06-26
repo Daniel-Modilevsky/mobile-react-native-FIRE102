@@ -29,8 +29,6 @@ const RealTimeScreen = ({ provider, navigation, myLocation }) => {
         return response.json();
       })
       .then(function (recivedMarkers) {
-        console.log(recivedMarkers[0].coordinate.latitude);
-        console.log(recivedMarkers[0].coordinate.longitude);
         setMarkers(recivedMarkers);
         setCountMarkers(recivedMarkers.length);
       })
@@ -53,7 +51,7 @@ const RealTimeScreen = ({ provider, navigation, myLocation }) => {
         {countMarkers > 0 &&
           markers.map((marker) => (
             <Marker
-              title={marker.key}
+              title={"דיווח"}
               image={WarningIcon}
               coordinate={{
                 latitude: marker.coordinate.latitude,
@@ -74,15 +72,15 @@ const RealTimeScreen = ({ provider, navigation, myLocation }) => {
       </MapView>
       <HeaderFire navigation={navigation} style={styles.header} />
       <View style={styles.headLine}>
-          <Pressable style={styles.back}>
-            <Button
-              type="outline"
-              title=" "
-            />
-          </Pressable>
-          <Text style={styles.textHeadline}> מפת הדיווחים</Text>
-          <Text style={styles.underText}>{countMarkers} אירועים</Text>
-        </View>
+        <Pressable style={styles.back}>
+          <Button
+            type="outline"
+            title=" "
+          />
+        </Pressable>
+        <Text style={styles.textHeadline}> מפת הדיווחים</Text>
+        <Text style={styles.underText}>{countMarkers} אירועים</Text>
+      </View>
     </View>
   );
 };
@@ -96,7 +94,6 @@ RealTimeScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    // justifyContent: "flex-end",
     alignItems: "center",
   },
   loaderBack: {
@@ -125,7 +122,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     width: 300,
-    height:50
+    height: 50
   },
   back: {
     marginLeft: 15,
@@ -134,7 +131,7 @@ const styles = StyleSheet.create({
     color: "yellow",
     fontSize: 14,
     fontWeight: "700",
-    textAlign:"center",
+    textAlign: "center",
     position: "absolute",
     marginTop: 40,
     marginLeft: "31%"
@@ -176,8 +173,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     marginTop: 200,
   },
-  counter:{
-    position:"absolute",
+  counter: {
+    position: "absolute",
     marginTop: 50,
     color: "black",
     backgroundColor: "green",

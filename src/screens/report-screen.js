@@ -61,42 +61,42 @@ const ReportScreen = ({
     comment: note,
     image: photo,
   };
-  
+
   useEffect(() => {
     customType();
     setMarker(marker);
   }, []);
 
   const sendReport = () => {
-    try{
-    fetch("https://fire102.herokuapp.com/api/reports", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(tempReport),
-    })
-      .then(function (response) {
-        console.log(response);
-        return response.json();
+    try {
+      fetch("https://fire102.herokuapp.com/api/reports", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tempReport),
       })
-      .then(function (json) {
-        console.log(json);
-      })
-      .catch(function (error) {
-        console.log(
-          "There has been a problem with your fetch operation: " + error.message
-        );
-        throw error;
-      });
-    }catch(error){
+        .then(function (response) {
+          console.log(response);
+          return response.json();
+        })
+        .then(function (json) {
+          console.log(json);
+        })
+        .catch(function (error) {
+          console.log(
+            "There has been a problem with your fetch operation: " + error.message
+          );
+          throw error;
+        });
+    } catch (error) {
       console.log(error);
     }
   };
 
   const sendMarker = () => {
-    try{
+    try {
       fetch("https://fire102.herokuapp.com/api/markers", {
         method: "POST",
         mode: "cors",
@@ -118,10 +118,10 @@ const ReportScreen = ({
           );
           throw error;
         });
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-   
+
   };
 
   const customType = () => {

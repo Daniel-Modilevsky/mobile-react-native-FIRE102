@@ -57,13 +57,13 @@ const MapReducer = (state = initState, action) => {
         ...state,
         type: action.payload,
       };
-    
+
     case "ADD_PHOTO":
       return {
         ...state,
         photoUrl: action.payload,
       }
-      ;
+        ;
     default:
       return state;
   }

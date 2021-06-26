@@ -36,7 +36,7 @@ export function AddMarker(marker) {
  * @param type:string
  * @return {dispatch} Type + payload.
  */
- export function AddType(type) {
+export function AddType(type) {
   return { type: "ADD_TYPE", payload: type };
 }
 
@@ -46,6 +46,6 @@ export function AddMarker(marker) {
  * @param photo:string (in base64)
  * @return {dispatch} Type + payload.
  */
- export function AddPhoto(photo) {
+export function AddPhoto(photo) {
   return { type: "ADD_PHOTO", payload: photo };
 }

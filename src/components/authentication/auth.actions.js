@@ -16,7 +16,8 @@ export function register(
   email,
   password,
   phoneNumber,
-  identityNumer
+  identityNumer,
+  testing = false,
 ) {
   const params = {
     userName: userName,
@@ -25,26 +26,34 @@ export function register(
     phoneNumber: phoneNumber,
     identityNumer: identityNumer
   }
-  fetch('https://fire102.herokuapp.com/api/signup',{
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(params)
+
+  if (testing) {
+    return {
+      type: "REGISTER",
+      payload: { userName, email, password, phoneNumber, identityNumer },
+    };
+  }
+
+  fetch('https://fire102.herokuapp.com/api/signup', {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(params)
+  })
+    .then(function (response) {
+      return response.json();
     })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (json) {
-        console.log(json);
-      })
-      .catch(function (error) {
-        console.log(
-          "There has been a problem with your fetch operation: " + error.message
-        );
-        throw error;
-      });
+    .then(function (json) {
+      console.log(json);
+    })
+    .catch(function (error) {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
+      throw error;
+    });
 
   return {
     type: "REGISTER",
@@ -68,26 +77,26 @@ export async function login(dispatch) {
       userName: userName,
       password: password,
     }
-    fetch('https://fire102.herokuapp.com/api/login',{
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(params)
+    fetch('https://fire102.herokuapp.com/api/login', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    })
+      .then(function (response) {
+        return response.json();
       })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (user) {
-          console.log(user);
-        })
-        .catch(function (error) {
-          console.log(
-            "There has been a problem with your fetch operation: " + error.message
-          );
-          throw error;
-        });
+      .then(function (user) {
+        console.log(user);
+      })
+      .catch(function (error) {
+        console.log(
+          "There has been a problem with your fetch operation: " + error.message
+        );
+        throw error;
+      });
     dispatch({
       type: "LOGIN",
       payload: { userName, email, password, phoneNumber, identityNumer },

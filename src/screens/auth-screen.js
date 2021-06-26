@@ -104,10 +104,10 @@ const AuthScreen = ({
   /*EVENT-HANDLERS*/
   const submitHandler = () => {
     currentUserName === "none" ||
-    currentEmail === "none" ||
-    currentPhoneNumber === "none" ||
-    currentPassword === "none" ||
-    currentIdentityNumer === "none"
+      currentEmail === "none" ||
+      currentPhoneNumber === "none" ||
+      currentPassword === "none" ||
+      currentIdentityNumer === "none"
       ? setInVallidMessage("נא למלא את כל הטופס, חסרים פרטים")
       : {};
     validator.isMobilePhone(currentPhoneNumber)
@@ -257,11 +257,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 30,
   },
   logo: {
-    height: 180,
-    width: 180,
+    height: '15%',
+    width: '15%',
   },
   inputView: {
     width: "80%",
